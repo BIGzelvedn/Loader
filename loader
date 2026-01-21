@@ -1,25 +1,41 @@
+-- =========================
+-- 🔹 PLACEID SCRIPT LOADER
 -- Prevent double load
+-- =========================
+
 if _G.GAME_LOADER_LOADED then return end
 _G.GAME_LOADER_LOADED = true
 
--- Game fully loaded check
+-- Ensure game fully loaded
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
 local PlaceId = game.PlaceId
 
+-- =========================
+--  PLACEID 
+-- dd new games by adding new entries
+-- =========================
 local GameScripts = {
-    [198116126] = "loadstring(game:HttpGet("https://raw.githubusercontent.com/BIGzelvedn/Tradelandsv2/refs/heads/main/Tradelands1",true))()",
-    [691884101] = "loadstring(game:HttpGet("https://raw.githubusercontent.com/BIGzelvedn/DynamicShip/refs/heads/main/DSS3",true))()",
-    [139571938533204] = "loadstring(game:HttpGet("https://raw.githubusercontent.com/BIGzelvedn/BSS/refs/heads/main/BalticSea",true))()",
+    [198116126] = "https://raw.githubusercontent.com/BIGzelvedn/Tradelandsv2/refs/heads/main/Tradelands1",
+    [691884101] = "https://raw.githubusercontent.com/BIGzelvedn/DynamicShip/refs/heads/main/DSS3",
+    [139571938533204] = "https://raw.githubusercontent.com/BIGzelvedn/BSS/refs/heads/main/BalticSea",
 }
 
--- load script
+-- =========================
+--  load it
+-- =========================
 local scriptUrl = GameScripts[PlaceId]
 
 if scriptUrl then
-    loadstring(game:HttpGet(scriptUrl))()
+    -- Load and execute the script
+    local success, err = pcall(function()
+        loadstring(game:HttpGet(scriptUrl, true))()
+    end)
+    if not success then
+        warn("script cannot load", err)
+    end
 else
-    warn("Game Not Supported | PlaceId:", PlaceId)
+    warn("Not Supported Game | PlaceId:", PlaceId)
 end
